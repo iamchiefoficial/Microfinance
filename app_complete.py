@@ -761,35 +761,86 @@ def client_loan_history(client_id):
     return render_template('client_loan_history.html', client=client, loans=loans, viewer=user)
 
 def get_analytics_data():
-    """Get analytics data for dashboard charts"""
-    # Simple stats
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    """Get REAL analytics data from database"""
+    from collections import defaultdict
+    from sqlalchemy import func
     
-    # Get basic counts
-    total_approved = Loan.query.filter_by(status='approved').count()
-    total_pending = Loan.query.filter_by(status='pending').count()
-    total_rejected = Loan.query.filter_by(status='rejected').count()
+    # Get real data for last 6 months
+    months = []
+    approval_counts = []
+    pending_counts = []
+    revenue_data = []
+    client_counts = []
     
-    # Loan type distribution
-    individual_loans = Loan.query.filter(Loan.purpose != 'Group Loan', Loan.purpose != 'Business', Loan.purpose != 'Emergency').count()
+    for i in range(5, -1, -1):
+        month_date = datetime.now().replace(day=1) - timedelta(days=30*i)
+        month_name = month_date.strftime('%b %Y')
+        months.append(month_name)
+        
+        # Start and end of month
+        start_of_month = month_date.replace(day=1, hour=0, minute=0, second=0)
+        if i == 0:
+            end_of_month = datetime.now()
+        else:
+            next_month = month_date.replace(day=28) + timedelta(days=4)
+            end_of_month = next_month.replace(day=1, hour=23, minute=59, second=59)
+        
+        # Count approved loans in this month (REAL DATA)
+        approved_count = Loan.query.filter(
+            Loan.status == 'approved',
+            Loan.updated_at >= start_of_month,
+            Loan.updated_at <= end_of_month
+        ).count()
+        
+        # Count pending loans in this month (REAL DATA)
+        pending_count = Loan.query.filter(
+            Loan.status == 'pending',
+            Loan.created_at >= start_of_month,
+            Loan.created_at <= end_of_month
+        ).count()
+        
+        # Calculate revenue from payments (REAL DATA)
+        revenue = db.session.query(func.sum(Payment.amount)).filter(
+            Payment.payment_date >= start_of_month,
+            Payment.payment_date <= end_of_month,
+            Payment.status == 'completed'
+        ).scalar() or 0
+        
+        # New clients registered (REAL DATA)
+        new_clients = User.query.filter(
+            User.role == 'client',
+            User.created_at >= start_of_month,
+            User.created_at <= end_of_month
+        ).count()
+        
+        approval_counts.append(approved_count)
+        pending_counts.append(pending_count)
+        revenue_data.append(float(revenue))
+        client_counts.append(new_clients)
+    
+    # Loan type distribution (REAL DATA)
+    individual_loans = Loan.query.filter(Loan.purpose.notin_(['Group Loan', 'Business', 'Emergency'])).count()
     group_loans = Loan.query.filter_by(purpose='Group Loan').count()
     business_loans = Loan.query.filter_by(purpose='Business').count()
     emergency_loans = Loan.query.filter_by(purpose='Emergency').count()
     
-    # Monthly data (simplified)
-    approval_data = [5, 8, 12, 15, 20, 18]
-    revenue_data = [5000000, 7500000, 10000000, 12000000, 15000000, 14000000]
-    client_data = [3, 5, 8, 10, 12, 15]
+    # Calculate totals
+    total_approved = sum(approval_counts)
+    total_pending = sum(pending_counts)
+    total_revenue = sum(revenue_data)
     
     return {
         'approval_labels': months,
-        'approval_data': approval_data,
-        'pending_data': [2, 3, 4, 5, 6, 4],
+        'approval_data': approval_counts,
+        'pending_data': pending_counts,
         'revenue_labels': months,
         'revenue_data': revenue_data,
         'client_labels': months,
-        'client_data': client_data,
-        'loan_type_data': [individual_loans, group_loans, business_loans, emergency_loans]
+        'client_data': client_counts,
+        'loan_type_data': [individual_loans, group_loans, business_loans, emergency_loans],
+        'total_approved': total_approved,
+        'total_pending': total_pending,
+        'total_revenue': total_revenue
     }
 
 @app.route('/admin_dashboard')
@@ -2190,6 +2241,50 @@ def mpesa_callback():
         return {'ResultCode': 0, 'ResultDesc': 'Success'}
     except Exception as e:
         return {'ResultCode': 1, 'ResultDesc': str(e)}
+
+@app.route('/api/realtime_stats')
+def realtime_stats():
+    """Get real-time statistics for dashboard"""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    from sqlalchemy import func
+    
+    # Get real-time counts
+    total_loans = Loan.query.count()
+    pending_loans = Loan.query.filter_by(status='pending').count()
+    approved_loans = Loan.query.filter_by(status='approved').count()
+    rejected_loans = Loan.query.filter_by(status='rejected').count()
+    total_clients = User.query.filter_by(role='client').count()
+    
+    # Get real-time revenue
+    total_revenue = db.session.query(func.sum(Payment.amount)).filter(
+        Payment.status == 'completed'
+    ).scalar() or 0
+    
+    # Get today's activity
+    today = datetime.now().replace(hour=0, minute=0, second=0)
+    today_loans = Loan.query.filter(Loan.created_at >= today).count()
+    today_payments = Payment.query.filter(Payment.payment_date >= today).count()
+    
+    return jsonify({
+        'success': True,
+        'stats': {
+            'total_loans': total_loans,
+            'pending_loans': pending_loans,
+            'approved_loans': approved_loans,
+            'rejected_loans': rejected_loans,
+            'total_clients': total_clients,
+            'total_revenue': float(total_revenue),
+            'today_loans': today_loans,
+            'today_payments': today_payments
+        },
+        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    })
+
+@app.route('/about_us')
+def about_us():
+    return render_template('about_us.html')
 
 if __name__ == '__main__':
     with app.app_context():

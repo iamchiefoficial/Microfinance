@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Orethan Microfinance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2c5aa6;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        
+        /* Main container - full screen */
+        .about-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+        }
+        
+        /* Each section takes full screen */
+        .section {
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* Hero Section - Soft Navy */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3d6e 0%, #2c5aa6 100%);
+            color: white;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .hero-content h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Mission & Vision Section - Soft Gray/Blue */
+        .mission-section {
+            background: #f0f4f8;
+            color: #2c3e50;
+        }
+        
+        .mv-container {
+            display: flex;
+            gap: 50px;
+            max-width: 1200px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .mv-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .mv-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .mv-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .mv-card h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #2c5aa6;
+        }
+        
+        .mv-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        /* Values Section - Soft Beige */
+        .values-section {
+            background: #f9f6f0;
+            color: #2c3e50;
+        }
+        
+        .values-container {
+            max-width: 1000px;
+            text-align: center;
+        }
+        
+        .values-container h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            color: #2c5aa6;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .value-item {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .value-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .value-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .value-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c5aa6;
+        }
+        
+        .value-item p {
+            font-size: 13px;
+            opacity: 0.8;
+            color: #666;
+        }
+        
+        /* Stats Section - Soft Mint */
+        .stats-section {
+            background: #e8f5e9;
+            color: #2c3e50;
+        }
+        
+        .stats-container {
+            text-align: center;
+            max-width: 1000px;
+        }
+        
+        .stats-container h2 {
+            font-size: 42px;
+            margin-bottom: 40px;
+            color: #2c5aa6;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c5aa6;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            color: #666;
+        }
+        
+        /* Location Section - Soft Peach */
+        .location-section {
+            background: #fef5e7;
+            color: #2c3e50;
+        }
+        
+        .location-container {
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .location-container h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            color: #2c5aa6;
+        }
+        
+        .address-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .address-box p {
+            font-size: 18px;
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #444;
+        }
+        
+        .contact-info {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        .contact-info p {
+            color: #2c5aa6;
+            font-weight: bold;
+        }
+        
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(44,90,166,0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            z-index: 100;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background: #1e3d6e;
+            transform: translateX(-5px);
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(44,90,166,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-indicator:hover {
+            background: #1e3d6e;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .values-grid, .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .mv-container {
+                gap: 20px;
+            }
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            .section {
+                padding: 20px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        .about-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .about-container::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+        
+        .about-container::-webkit-scrollbar-thumb {
+            background: #2c5aa6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">← Back to Home</a>
+    <div class="scroll-indicator">
+        Scroll ↓
+    </div>
+    
+    <div class="about-container">
+        <!-- Hero Section -->
+        <div class="section hero-section">
+            <div class="hero-content">
+                <div class="hero-logo">🏦</div>
+                <h1>ORETHAN MICROFINANCE</h1>
+                <p>Empowering Dreams, Building Futures in Tanzania</p>
+                <p style="font-size: 16px;">Mbagala, Zakhiem - Ground | (+255) 769 337 774</p>
+            </div>
+        </div>
+        
+        <!-- Mission & Vision Section -->
+        <div class="section mission-section">
+            <div class="mv-container">
+                <div class="mv-card">
+                    <div class="mv-icon">🎯</div>
+                    <h2>Our Mission</h2>
+                    <p>To empower Tanzanian entrepreneurs and small businesses by providing quick, flexible, and affordable microfinance solutions that help them grow and succeed.</p>
+                </div>
+                <div class="mv-card">
+                    <div class="mv-icon">👁️</div>
+                    <h2>Our Vision</h2>
+                    <p>To become Tanzania's most trusted microfinance institution, recognized for our customer-centric approach and commitment to community development.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Core Values Section -->
+        <div class="section values-section">
+            <div class="values-container">
+                <h2>Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-icon">⭐</div>
+                        <h3>Integrity</h3>
+                        <p>We operate with honesty and transparency in all our dealings</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">🤝</div>
+                        <h3>Customer First</h3>
+                        <p>Our clients' success is our priority</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">⚡</div>
+                        <h3>Innovation</h3>
+                        <p>Embracing technology for better service delivery</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">🌱</div>
+                        <h3>Community</h3>
+                        <p>Growing together with our local communities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Impact Statistics Section -->
+        <div class="section stats-section">
+            <div class="stats-container">
+                <h2>Our Impact So Far</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">5,000+</div>
+                        <div class="stat-label">Happy Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Tsh 50B+</div>
+                        <div class="stat-label">Loans Disbursed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Approval Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24hrs</div>
+                        <div class="stat-label">Fast Disbursement</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Location Section -->
+        <div class="section location-section">
+            <div class="location-container">
+                <h2>📍 Visit Us</h2>
+                <div class="address-box">
+                    <p><strong>Orethan Microfinance</strong></p>
+                    <p>Mbagala, Zakhiem - Ground</p>
+                    <p>P.O Box 77286</p>
+                    <p>Dar es Salaam, Tanzania</p>
+                    <div class="contact-info">
+                        <p>📞 (+255) 769 337 774</p>
+                        <p>📞 (+255) 702 519 104</p>
+                        <p>📧 orethantanzanialimited@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </body>
+</html>

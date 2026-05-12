@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Microfinance Platform
 
 A professional microfinance management system with role-based access control and complete loan workflow.
@@ -109,3 +110,6 @@ python app.py
 ```
 
 The application automatically creates demo data on first run, including sample users and clients for testing purposes.
+=======
+# Microfinance
+>>>>>>> f73f048ae9981a3a6bfcf3eb56584dcb65f5c691

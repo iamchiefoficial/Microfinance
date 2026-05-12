@@ -70,7 +70,7 @@
 <body>
     <div class="app-container">
         <div class="sidebar">
-            <div class="sidebar-header"><h3>🏦 ORETHAN</h3><p style="font-size:12px;color:#888">Microfinance System</p></div>
+            <div class="sidebar-header"><h3>🏦 ORETHAN</h3><p style="font-size:12px;color:#888">Admin Portal</p></div>
             <div class="sidebar-nav">
                 <a href="/admin_dashboard">📊 Dashboard</a>
 
@@ -95,7 +95,7 @@
             <div class="header">
                 <div class="header-content">
             {% include "language_switcher.html" %}
-                    <div><h1>Admin Dashboard</h1><p>Welcome, {{ user.full_name or user.username }} (Administrator)</p></div>
+                    <div><h1>Admin Dashboard</h1><p>Welcome, Chief (System Admin)</p></div>
                     <a href="/logout" class="logout-btn">Logout</a>
                 </div>
             </div>
@@ -344,6 +344,19 @@
         setInterval(function() {
             location.reload();
         }, 30000);
+    </script>
+    <script>
+        // Auto-refresh data every 30 seconds
+        let refreshInterval = setInterval(function() {
+            location.reload();
+        }, 30000);
+        
+        // Show last updated time
+        const lastUpdated = new Date().toLocaleString();
+        const statusBar = document.createElement('div');
+        statusBar.style.cssText = 'position:fixed;bottom:10px;right:10px;background:#2c5aa6;color:white;padding:5px 10px;border-radius:5px;font-size:11px;z-index:999';
+        statusBar.innerHTML = '📊 Real-time data | Last updated: ' + lastUpdated + ' | Auto-refresh every 30s';
+        document.body.appendChild(statusBar);
     </script>
 </body>
 </html>
