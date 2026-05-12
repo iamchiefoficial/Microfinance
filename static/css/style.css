@@ -1,0 +1,54 @@
+/* Orethan Microfinance Logo Styles */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.company-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.company-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c5aa6;
+    margin: 0;
+}
+
+.company-tagline {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+.company-contact {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 5px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .logo-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .logo-img {
+        height: 40px;
+    }
+    
+    .company-name {
+        font-size: 1.3rem;
+    }
+}

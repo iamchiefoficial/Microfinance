@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Documents - Orethan Microfinance</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial;background:#f5f5f5;min-height:100vh}
+        .app-container{display:flex;min-height:100vh}
+        .sidebar{width:280px;background:#1a1a2e;color:white;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+        .sidebar-header{padding:20px;text-align:center;border-bottom:1px solid #333}
+        .sidebar-header h3{color:#2c5aa6}
+        .sidebar-nav{padding:0 15px}
+        .sidebar-nav a{color:white;text-decoration:none;display:block;padding:12px 15px;margin:5px 0;border-radius:8px}
+        .sidebar-nav a:hover{background:#2c5aa6}
+        .main-content{margin-left:280px;flex:1;padding:20px;min-height:100vh}
+        .header{background:#2c5aa6;color:white;padding:20px;border-radius:10px;margin-bottom:20px}
+        .header-content{display:flex;justify-content:space-between;align-items:center}
+        table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden}
+        th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd}
+        th{background:#2c5aa6;color:white}
+        .status-pending{color:#856404;background:#fff3cd;padding:3px 8px;border-radius:5px;display:inline-block}
+        .status-verified{color:#155724;background:#d4edda;padding:3px 8px;border-radius:5px;display:inline-block}
+        .status-rejected{color:#721c24;background:#f8d7da;padding:3px 8px;border-radius:5px;display:inline-block}
+        .btn{background:#2c5aa6;color:white;padding:5px 10px;border:none;border-radius:3px;cursor:pointer}
+        .btn-success{background:#28a745}
+        .btn-danger{background:#dc3545}
+        .logout-btn{background:rgba(255,255,255,0.2);color:white;padding:5px 15px;border-radius:5px;text-decoration:none}
+        textarea{width:100%;padding:8px;margin-top:5px;border:1px solid #ddd;border-radius:4px}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header"><h3>🏦 ORETHAN</h3></div>
+            <div class="sidebar-nav">
+                <a href="/admin_dashboard">📊 Dashboard</a>
+                <a href="/admin/users">👥 Users</a>
+                <a href="/admin/loans">💰 Loans</a>
+                <a href="/admin/documents">📁 Documents</a>
+                <a href="/dashboard">🔙 Main</a>
+                <a href="/logout">🚪 Logout</a>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-content">
+                    <div><h1>Document Management</h1><p>Verify and manage client documents</p></div>
+                    <a href="/logout" class="logout-btn">Logout</a>
+                </div>
+            </div>
+            
+            <div style="background:white;border-radius:10px;overflow-x:auto">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Client</th><th>Document</th><th>Type</th><th>Uploaded</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc.id }}</td>
+                            <td>{{ doc.user.full_name or doc.user.username }}</td>
+                            <td>{{ doc.document_name }}</td>
+                            <td>{{ doc.document_type }}</td>
+                            <td>{{ doc.uploaded_at.strftime('%Y-%m-%d') }}</td>
+                            <td><span class="status-{{ doc.status }}">{{ doc.status|upper }}</span></td>
+                            <td>
+                                <a href="/download_document/{{ doc.id }}" class="btn">📥 View</a>
+                                <form method="POST" action="/verify_document/{{ doc.id }}" style="display:inline">
+                                    <input type="hidden" name="status" value="verified">
+                                    <button type="submit" class="btn btn-success">✓ Verify</button>
+                                </form>
+                                <form method="POST" action="/verify_document/{{ doc.id }}" style="display:inline">
+                                    <input type="hidden" name="status" value="rejected">
+                                    <textarea name="notes" placeholder="Rejection reason" style="width:150px"></textarea>
+                                    <button type="submit" class="btn btn-danger">✗ Reject</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

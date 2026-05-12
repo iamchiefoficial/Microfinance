@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - Microfinance Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+        }
+        
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .loan-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s;
+        }
+        
+        .loan-card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .loan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .loan-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stage-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .stage-loan_officer { background: #fff3cd; color: #856404; }
+        .stage-loan_manager { background: #d1ecf1; color: #0c5460; }
+        .stage-managing_director { background: #cce5ff; color: #004085; }
+        .stage-general_director { background: #d4edda; color: #155724; }
+        .stage-completed { background: #28a745; color: white; }
+        
+        .loan-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .loan-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-approve:hover {
+            background: #218838;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-reject:hover {
+            background: #c82333;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 100px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        
+        .modal-content h3 {
+            margin-bottom: 15px;
+        }
+        
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: inherit;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>🏦 Microfinance Platform</h1>
+                <p>Staff Portal - {{ user.role|replace('_', ' ')|title }}</p>
+            </div>
+            <div class="user-info">
+                <div class="user-name">{{ user.full_name or user.username }}</div>
+                <div class="user-role">{{ user.role|replace('_', ' ')|title }}</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn" >Logout</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_clients }}</div>
+                <div class="stat-label">Total Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_loans }}</div>
+                <div class="stat-label">Total Loans</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ pending_for_me }}</div>
+                <div class="stat-label">Pending Your Approval</div>
+            </div>
+        </div>
+        
+        <!-- Pending Loans Section -->
+        <div class="section">
+            <h3 class="section-title">📋 Loan Applications Pending Your Review</h3>
+            {% if pending_loans %}
+                {% for loan in pending_loans %}
+                <div class="loan-card">
+                    <div class="loan-header">
+                        <span class="loan-amount">${{ "%.2f"|format(loan.amount) }}</span>
+                        <span class="stage-badge stage-{{ loan.current_stage }}">{{ loan.get_current_stage_name() }}</span>
+                    </div>
+                    
+                    <div class="loan-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Client Name:</span>
+                            <span class="detail-value">{{ loan.client.full_name or loan.client.username }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">{{ loan.client.email or 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value">{{ loan.client.phone or 'N/A' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loan Purpose:</span>
+                            <span class="detail-value">{{ loan.purpose }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Term:</span>
+                            <span class="detail-value">{{ loan.term_months }} months</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Interest Rate:</span>
+                            <span class="detail-value">{{ loan.interest_rate }}%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Monthly Payment:</span>
+                            <span class="detail-value">${{ "%.2f"|format(loan.monthly_payment) }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Applied Date:</span>
+                            <span class="detail-value">{{ loan.created_at.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="loan-actions">
+                        <form method="POST" action="{{ url_for('approve_loan', loan_id=loan.id) }}" style="display: inline;" >
+                            <button type="submit" class="btn-approve">✅ Approve</button>
+                        </form>
+                        <button type="button" class="btn-reject" onclick="showRejectModal({{ loan.id }})">❌ Reject / Send Back</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    No loan applications pending your review at this time.
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- All Clients Section -->
+        <div class="section">
+            <h3 class="section-title">👥 Registered Clients</h3>
+            {% if all_clients %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                <th style="padding: 10px; text-align: left;">Name</th>
+                                <th style="padding: 10px; text-align: left;">Email</th>
+                                <th style="padding: 10px; text-align: left;">Phone</th>
+                                <th style="padding: 10px; text-align: left;">Registered Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in all_clients %}
+                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 10px;">{{ client.full_name or client.username }}</td>
+                                <td style="padding: 10px;">{{ client.email or 'N/A' }}</td>
+                                <td style="padding: 10px;">{{ client.phone or 'N/A' }}</td>
+                                <td style="padding: 10px;">{{ client.created_at.strftime('%Y-%m-%d') if client.created_at else 'N/A' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    No clients registered yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Rejection Modal -->
+    <div id="rejectModal" class="modal">
+        <div class="modal-content">
+            <h3>Rejection / Send Back Reason</h3>
+            <p>Please provide a reason for rejection or why you're sending it back:</p>
+            <textarea id="rejectionReason" rows="4" placeholder="Enter reason here..."></textarea>
+            <div class="modal-buttons">
+                <button onclick="submitRejection()" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Submit</button>
+                <button onclick="closeModal()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLoanId = null;
+        
+        function showRejectModal(loanId) {
+            currentLoanId = loanId;
+            document.getElementById('rejectModal').style.display = 'block';
+        }
+        
+        function submitRejection() {
+            const reason = document.getElementById('rejectionReason').value;
+            if (!reason) {
+                alert('Please provide a reason');
+                return;
+            }
+            
+            fetch(`/reject_loan/${currentLoanId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `rejection_reason=${encodeURIComponent(reason)}` 
+            }).then(response => {
+                window.location.reload();
+            });
+        }
+        
+        function closeModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+            document.getElementById('rejectionReason').value = '';
+            currentLoanId = null;
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('rejectModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+# create_upload_document.py
+content = '''<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Document - Orethan Microfinance</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial;background:#f5f5f5;padding:20px}
+        .container{max-width:600px;margin:0 auto;background:white;padding:30px;border-radius:10px}
+        h1{color:#2c5aa6;margin-bottom:20px}
+        .form-group{margin-bottom:20px}
+        label{display:block;font-weight:bold;margin-bottom:8px;color:#555}
+        input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:5px}
+        button{background:#2c5aa6;color:white;padding:12px;border:none;border-radius:5px;cursor:pointer;width:100%;font-size:16px}
+        .btn-back{background:#6c757d;margin-bottom:20px;display:inline-block;padding:8px 15px;color:white;text-decoration:none;border-radius:5px}
+        .info-box{background:#e8f4fd;padding:15px;border-radius:5px;margin-bottom:20px}
+        .allowed-formats{font-size:12px;color:#666;margin-top:5px}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/client_dashboard" class="btn-back">← Back to Dashboard</a>
+        <h1>📁 Upload Document</h1>
+        
+        <div class="info-box">
+            <strong>📋 Allowed Documents:</strong><br>
+            • National ID / Passport / Voter ID<br>
+            • Business License<br>
+            • Collateral Documents<br>
+            • Proof of Income (Bank statements, Pay slips)<br>
+            • Other supporting documents
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Document Type *</label>
+                <select name="document_type" required>
+                    <option value="ID Card">ID Card (National ID/Zanzibar ID)</option>
+                    <option value="Passport">Passport</option>
+                    <option value="Voter ID">Voter ID</option>
+                    <option value="Business License">Business License</option>
+                    <option value="Collateral">Collateral Document</option>
+                    <option value="Proof of Income">Proof of Income</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Related Loan (Optional)</label>
+                <select name="loan_id">
+                    <option value="">No specific loan</option>
+                    {% for loan in loans %}
+                    <option value="{{ loan.id }}">Loan #{{ loan.id }} - Tsh {{ "%.2f"|format(loan.amount) }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Select File *</label>
+                <input type="file" name="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required>
+                <div class="allowed-formats">Allowed formats: PNG, JPG, PDF, DOC (Max 16MB)</div>
+            </div>
+            
+            <button type="submit">Upload Document</button>
+        </form>
+        
+        <div style="margin-top:20px;text-align:center">
+            <a href="/my_documents" style="color:#2c5aa6">View My Documents →</a>
+        </div>
+    </div>
+</body>
+</html>'''
+
+with open('templates/upload_document.html', 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print('✅ Upload document template created!')

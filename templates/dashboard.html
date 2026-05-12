@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ role_name }} Dashboard | Microfinance Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <div><span class="role-badge"><i class="fas fa-id-card"></i> {{ role_name }} : {{ user.full_name }}</span></div>
+        <form method="POST" action="/logout">
+            <button type="submit" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </form>
+    </div>
+    
+    <div class="stats-grid">
+        {% for stat in stats %}
+        <div class="stat-card">
+            <i class="{{ stat.icon }}"></i>
+            <h4>{{ stat.label }}</h4>
+            <div class="value">{{ stat.value }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if recent_clients %}
+    <div class="client-list">
+        <h4><i class="fas fa-history"></i> Recently Joined Clients</h4>
+        {% for client in recent_clients %}
+        <div class="client-item">
+            <span>{{ client.full_name }}</span>
+            <span>{{ "${:,.0f}".format(client.monthly_income) }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if user.role == 'client' %}
+    <div class="loan-section">
+        <h4><i class="fas fa-hand-holding-usd"></i> Apply for Loan</h4>
+        {% if loan_message %}
+            <div class="message {{ loan_message_type }}">{{ loan_message }}</div>
+        {% endif %}
+        <form method="POST" action="/loan/apply">
+            <div class="input-group">
+                <label>Loan Amount *</label>
+                <input type="number" name="amount" placeholder="Enter amount" required>
+            </div>
+            <div class="input-group">
+                <label>Purpose *</label>
+                <input type="text" name="purpose" placeholder="e.g., Business expansion, Education" required>
+            </div>
+            <button type="submit" class="btn btn-apply"><i class="fas fa-paper-plane"></i> Submit Application</button>
+        </form>
+    </div>
+    {% elif user.role in ['loan_officer', 'loan_manager', 'general_director', 'managing_director'] %}
+    <div class="loan-section">
+        <h4><i class="fas fa-hand-holding-usd"></i> Pending Loan Applications</h4>
+        {% if pending_loans %}
+            {% for loan in pending_loans %}
+            <div class="loan-item">
+                <h5>{{ loan.client_name }}</h5>
+                <p><strong>Amount:</strong> {{ "${:,.0f}".format(loan.amount) }}</p>
+                <p><strong>Purpose:</strong> {{ loan.purpose }}</p>
+                <p><strong>Applied:</strong> {{ loan.created_at.strftime('%Y-%m-%d') }}</p>
+                
+                {% if loan_decision_message and loan_decision_message.loan_id == loan.id %}
+                    <div class="message {{ loan_decision_message.type }}">{{ loan_decision_message.text }}</div>
+                {% endif %}
+                
+                <form method="POST" action="/loan/approve" style="margin-top: 0.5rem;">
+                    <input type="hidden" name="loan_id" value="{{ loan.id }}">
+                    <div class="input-group">
+                        <textarea name="comments" placeholder="Add comments (optional)"></textarea>
+                    </div>
+                    <div class="loan-actions">
+                        <button type="submit" name="decision" value="approved" class="btn-small btn-approve">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button type="submit" name="decision" value="rejected" class="btn-small btn-reject">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; padding: 1rem; color: #5e8b80;">No pending loan applications</div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

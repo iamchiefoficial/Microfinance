@@ -1,0 +1,203 @@
+# create_group_form_direct.ps1
+$html = @"
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <title>Fomu ya Mkopo wa Kikundi - Orethan Microfinance</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial;background:#e0e0e0;padding:20px}
+        .form-container{max-width:1100px;margin:0 auto;background:white;padding:25px;border-radius:10px}
+        .header{text-align:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #2c5aa6}
+        .company-name{font-size:24px;font-weight:bold;color:#2c5aa6}
+        .company-address{font-size:11px;color:#666}
+        h2{text-align:center;margin:15px 0;color:#2c5aa6}
+        .page{display:none}
+        .page.active{display:block}
+        .section{background:#f9f9f9;padding:20px;margin-bottom:20px;border-radius:8px}
+        .section-title{font-size:16px;font-weight:bold;margin-bottom:15px;border-bottom:2px solid #2c5aa6;color:#2c5aa6}
+        .form-row{display:flex;gap:15px;margin-bottom:12px;flex-wrap:wrap}
+        .form-field{flex:1;min-width:180px}
+        .form-field label{display:block;font-weight:bold;margin-bottom:5px;font-size:11px}
+        .form-field input,.form-field select,.form-field textarea{width:100%;padding:6px;border:1px solid #ccc;border-radius:4px}
+        table{width:100%;border-collapse:collapse;margin-top:10px}
+        th,td{border:1px solid #ddd;padding:6px;text-align:left}
+        th{background:#2c5aa6;color:white}
+        .btn-add{background:#28a745;color:white;padding:5px 15px;border:none;border-radius:4px;cursor:pointer}
+        .btn-remove{background:#dc3545;color:white;padding:2px 8px;border:none;border-radius:3px;cursor:pointer}
+        .nav-buttons{display:flex;justify-content:space-between;margin-top:30px}
+        .btn-nav{background:#2c5aa6;color:white;padding:10px 25px;border:none;border-radius:5px;cursor:pointer}
+        .btn-submit{background:#28a745}
+        .page-indicator{text-align:center;margin-bottom:20px}
+        .page-btn{display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;border-radius:50%;background:#ddd;margin:0 5px;cursor:pointer}
+        .page-btn.active{background:#2c5aa6;color:white}
+        .declaration{background:#fff3cd;padding:12px;margin:15px 0}
+        .signature-area{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px}
+        .signature-line{border-top:1px solid #000;margin-top:25px;padding-top:8px;text-align:center}
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="header">
+        <div class="company-name">🏦 ORETHAN MICROFINANCE</div>
+        <div class="company-address">Mbagala, Zakhiem- Ground | (+255) 769 337 774</div>
+    </div>
+    <h2>FOMU YA MAOMBI YA MKOPO WA KIKUNDI</h2>
+    
+    <div class="page-indicator">
+        <span class="page-btn active" onclick="showPage(1)">1</span>
+        <span class="page-btn" onclick="showPage(2)">2</span>
+        <span class="page-btn" onclick="showPage(3)">3</span>
+        <span class="page-btn" onclick="showPage(4)">4</span>
+        <span class="page-btn" onclick="showPage(5)">5</span>
+        <span class="page-btn" onclick="showPage(6)">6</span>
+    </div>
+    
+    <form method="POST" action="/submit_group_loan">
+        <div id="page1" class="page active">
+            <div class="section">
+                <div class="section-title">1. TAARIFA ZA MWOMBAJI</div>
+                <div class="form-row">
+                    <div class="form-field"><label>Jina kamili</label><input type="text" name="applicant_full_name" required></div>
+                    <div class="form-field"><label>Jinsia</label><select name="gender"><option>Me</option><option>Ke</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field"><label>Simu</label><input type="tel" name="phone"></div>
+                    <div class="form-field"><label>Eneo unaloishi</label><input type="text" name="residence_area"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page2" class="page">
+            <div class="section">
+                <div class="section-title">2. TAARIFA ZA KIKUNDI</div>
+                <div class="form-row">
+                    <div class="form-field"><label>Jina la Mwenyekiti</label><input type="text" name="group_chairperson"></div>
+                    <div class="form-field"><label>Jina la Katibu</label><input type="text" name="group_secretary"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field"><label>Mkoa</label><input type="text" name="region"></div>
+                    <div class="form-field"><label>Wilaya</label><input type="text" name="district"></div>
+                    <div class="form-field"><label>Kata</label><input type="text" name="ward"></div>
+                    <div class="form-field"><label>Kijiji/mtaa</label><input type="text" name="village"></div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-title">3. KIASI CHA MKOPO</div>
+                <div class="form-row">
+                    <div class="form-field"><label>Kiasi cha Mkopo (Tsh)</label><input type="number" name="loan_amount" required></div>
+                    <div class="form-field"><label>Muda wa kulipa (miezi)</label><input type="number" name="repayment_period"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field"><label>Malengo ya Mkopo</label><textarea name="loan_purpose" rows="2"></textarea></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page3" class="page">
+            <div class="section">
+                <div class="section-title">4. TAARIFA ZA MDHAMINI</div>
+                <div class="form-row">
+                    <div class="form-field"><label>Mdhamini 1 - Jina kamili</label><input type="text" name="guarantor1_full_name"></div>
+                    <div class="form-field"><label>Simu</label><input type="tel" name="guarantor1_phone"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field"><label>Mdhamini 2 - Jina kamili</label><input type="text" name="guarantor2_full_name"></div>
+                    <div class="form-field"><label>Simu</label><input type="tel" name="guarantor2_phone"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field"><label>Uhusiano</label><input type="text" name="guarantor2_relationship" placeholder="Mume/Mke/Ndugu"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page4" class="page">
+            <div class="section">
+                <div class="section-title">5. TAARIFA ZA DHAMANA</div>
+                <table id="collateralTable">
+                    <thead><tr><th>Aina</th><th>Namba ya usajili</th><th>Thamani</th><th>Thamani kwa sasa</th><th>Umri</th><th>Mmiliki</th><th>Rangi</th><th>Mahali</th><th></th></tr></thead>
+                    <tbody id="collateralBody">
+                        <tr>
+                            <td><input type="text" name="collateral_type[]" style="width:100%"></td>
+                            <td><input type="text" name="collateral_reg_no[]" style="width:100%"></td>
+                            <td><input type="number" name="collateral_value[]" style="width:100%"></td>
+                            <td><input type="number" name="collateral_current_value[]" style="width:100%"></td>
+                            <td><input type="number" name="collateral_age[]" style="width:100%"></td>
+                            <td><input type="text" name="collateral_owner[]" style="width:100%"></td>
+                            <td><input type="text" name="collateral_color[]" style="width:100%"></td>
+                            <td><input type="text" name="collateral_location[]" style="width:100%"></td>
+                            <td><button type="button" class="btn-remove" onclick="removeRow(this)">✗</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-add" onclick="addCollateralRow()">+ Ongeza Dhamana</button>
+            </div>
+        </div>
+        
+        <div id="page5" class="page">
+            <div class="section">
+                <div class="section-title">TAMKO LA MWOMBAJI</div>
+                <div class="declaration">
+                    <p>Mimi <input type="text" name="applicant_declaration_name" placeholder="Jina" style="width:200px"> nimeomba mkopo wa Tsh <input type="text" name="applicant_declaration_amount" placeholder="Kiasi" style="width:120px"> kutoka Orethan Microfinance. Nakiri kwamba taarifa zote nilizozitoa ni sahihi.</p>
+                </div>
+                <div class="signature-area">
+                    <div><div class="signature-line">SAHIHI</div><input type="text" name="applicant_signature"></div>
+                    <div><div class="signature-line">TAREHE</div><input type="date" name="applicant_date"></div>
+                    <div><div class="signature-line">DOLE GUMBA</div><input type="text" name="applicant_thumbprint"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page6" class="page">
+            <div class="section">
+                <div class="section-title">TAMKO LA MDHAMINI</div>
+                <div class="declaration">
+                    <p>Mimi <input type="text" name="guarantor1_declaration_name" placeholder="Jina" style="width:150px"> nakubali kumdhamini <input type="text" name="guarantor1_declaration_applicant" placeholder="Mwombaji" style="width:150px"> kwa mkopo wa Tsh <input type="text" name="guarantor1_declaration_amount" placeholder="Kiasi" style="width:100px">.</p>
+                </div>
+                <div class="signature-area">
+                    <div><div class="signature-line">SAHIHI</div><input type="text" name="guarantor1_signature"></div>
+                    <div><div class="signature-line">TAREHE</div><input type="date" name="guarantor1_date"></div>
+                    <div><div class="signature-line">DOLE GUMBA</div><input type="text" name="guarantor1_thumbprint"></div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:20px">
+                <p>Tel: (+255) 677 042 374</p>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button type="button" class="btn-nav" id="prevBtn" onclick="changePage(-1)" style="display:none">← PREV</button>
+            <button type="button" class="btn-nav" id="nextBtn" onclick="changePage(1)">NEXT →</button>
+            <button type="submit" class="btn-nav btn-submit" id="submitBtn" style="display:none">✓ WASILISHA</button>
+        </div>
+    </form>
+</div>
+<script>
+    let currentPage = 1;
+    const totalPages = 6;
+    function showPage(p){
+        for(let i=1;i<=totalPages;i++){let el=document.getElementById('page'+i);if(el)el.classList.remove('active');}
+        let np=document.getElementById('page'+p);if(np)np.classList.add('active');
+        for(let i=1;i<=totalPages;i++){let btn=document.querySelector('.page-btn:nth-child('+i+')');if(btn){if(i===p)btn.classList.add('active');else btn.classList.remove('active');}}
+        let prev=document.getElementById('prevBtn');let next=document.getElementById('nextBtn');let sub=document.getElementById('submitBtn');
+        if(prev){if(p===1)prev.style.display='none';else prev.style.display='inline-block';}
+        if(next&&sub){if(p===totalPages){next.style.display='none';sub.style.display='inline-block';}else{next.style.display='inline-block';sub.style.display='none';}}
+        currentPage=p;
+    }
+    function changePage(d){let np=currentPage+d;if(np>=1&&np<=totalPages)showPage(np);}
+    function addCollateralRow(){
+        let tbody=document.getElementById('collateralBody');if(!tbody)return;
+        let nr=tbody.insertRow();let fields=['collateral_type','collateral_reg_no','collateral_value','collateral_current_value','collateral_age','collateral_owner','collateral_color','collateral_location'];
+        for(let i=0;i<fields.length;i++){let c=nr.insertCell(i);let inp=document.createElement('input');inp.type=(i>=2&&i<=4)?'number':'text';inp.name=fields[i]+'[]';inp.style.width='100%';c.appendChild(inp);}
+        let ac=nr.insertCell(fields.length);let rb=document.createElement('button');rb.type='button';rb.className='btn-remove';rb.innerHTML='✗';rb.onclick=function(){this.closest('tr').remove();};ac.appendChild(rb);
+    }
+    function removeRow(btn){let row=btn.closest('tr');if(row&&row.parentNode.children.length>1)row.remove();}
+</script>
+</body>
+</html>
+"@
+
+$html | Out-File -FilePath "templates\group_loan_form.html" -Encoding UTF8
+Write-Host "✅ NEW MULTI-PAGE GROUP LOAN FORM CREATED!"
+Write-Host "📋 Features: 6 pages, navigation, table on page 4"
